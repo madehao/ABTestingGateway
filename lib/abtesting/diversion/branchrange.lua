@@ -58,7 +58,7 @@ _M.check = function(self, policy)
     if i > 1 then
         if stbranch <= last_edbranch then
             local info = ERRORINFO.POLICY_INVALID_ERROR
-            local desc = 'uidrange overlapped'
+            local desc = 'branchrange overlapped'
             return {false, info, desc}
         end
     end
@@ -111,14 +111,14 @@ _M.get = function(self)
     return policy 
 end
 
-_M.getUpstream = function(self, uid)
-    if not tonumber(uid) then
+_M.getUpstream = function(self, branch)
+    if not tonumber(branch) then
         return nil
     end
     
     local database, policyLib = self.database, self.policyLib
     
-    local val, err = database:zrangebyscore(policyLib, uid, '+inf', 'limit','0', '1', 'withscores')
+    local val, err = database:zrangebyscore(policyLib, branch, '+inf', 'limit','0', '1', 'withscores')
     if not val then error{ERRORINFO.REDIS_ERROR, err} end
     
     if not next(val) then return nil end
